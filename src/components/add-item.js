@@ -35,10 +35,10 @@ class AddNewItem extends React.Component {
           <Container>
             <h2>Our Items</h2>
             <p>
-              <Form data-testid="add-form" onSubmit={this.handleSubmit}>
+              <Form data-testid="add-form" onSubmit={(e) => this.handleSubmit(e)}>
                 <Form.Group>
                   <Form.Label>Item</Form.Label>
-                  <Form.Control type="text" placeholder="Enter email" data-testid="add-form-name" name="name" onChange={this.handleChange} />
+                  <Form.Control type="text" placeholder="Enter item" data-testid="add-form-name" name="name" onChange={this.handleChange} />
                 </Form.Group>
                 <Form.Group>
                   <Form.Label>Description</Form.Label>

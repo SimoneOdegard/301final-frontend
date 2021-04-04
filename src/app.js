@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import Form from './components/add-item.js';
+import AddNewItem from './components/add-item.js';
 import Items from './components/items.js';
+import './style.css';
 
 const API_SERVER = process.env.REACT_APP_API;
 
@@ -10,39 +11,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
-      newItem: '',
-      description: ''
+      items: []
     }
   }
 
-  updateItem = (newItem) => this.setState ({ newItem });
-  updateDescription = (description) => this.setState({ description });
-
-  async componentDidMount() {
-    await this.getItems();
-  }
-
-  getItems = async () => {
-    const response = await axios.get(`${API_SERVER}/items`);
-    const items = response.data;
-    this.setState({items});
-    console.log(items);
-  }
-
   addItem = async (item) => {
-    const items = await axios.post(`${API_SERVER}/items`, { newItem: this.state.newItem, description: this.state.description });
-    this.setState({ items: items.data });
-    console.log('inside addItem', items.data);
+    console.log('addItem item', item);
+    await axios.post(`${API_SERVER}/items`, item);
     this.getItems();
   }
 
   deleteItem = async (id) => {
     await axios.delete(`${API_SERVER}/items/${id}`);
-    const newItemArray = this.state.items.filter((item, idx) => {
-      return id !== idx;
-    });
-    this.setState({ items: newItemArray });
     this.getItems();
   }
 
@@ -51,6 +31,16 @@ class App extends React.Component {
     this.getItems();
   }
 
+  getItems = async () => {
+    const response = await axios.get(`${API_SERVER}/items`);
+    const items = response.data;
+    this.setState({items});
+    console.log('inside get items', items);
+  }
+
+  async componentDidMount() {
+    await this.getItems();
+  }
 
 
   render() {
@@ -58,12 +48,18 @@ class App extends React.Component {
       <div>
         <br/>
         <center>
-          <h1>Welcome!</h1>
+          <h1 className="welcome">Welcome!</h1>
         </center>
         <br/>
-        <Form handleAddItem={this.addItem} />
+        <AddNewItem 
+        handleAddItem={this.addItem} 
+        />
         <hr />
-        <Items handleDelete={this.deleteItem} itemsList={this.state.items} />
+        <Items 
+        handleDelete={this.deleteItem} 
+        handleUpdate={this.updateItem}
+        itemsList={this.state.items}
+        />
       </div>
     );
   }
